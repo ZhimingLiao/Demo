@@ -1,0 +1,8 @@
+.idea/*
+# 对不需要的进行版本控制的文件在次添加
+# 过滤参考 https://www.cnblogs.com/kevingrace/p/5690241.html
+*/__pychache__/*
+*.pyc
+*/dist/*
+*/build/*
+/venv/

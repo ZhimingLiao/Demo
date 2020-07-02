@@ -15,6 +15,7 @@
 # ======================================================================
 import os
 
+from tqdm import tqdm
 import xlrd as xd
 import openpyxl as xt
 import pypinyin as ppy
@@ -23,7 +24,7 @@ import pypinyin as ppy
 class ExcelUtils(object):
 
     @staticmethod
-    def excel_to_list(file_path: str)->list:
+    def excel_to_list(file_path: str) -> list:
         """
         从excel文件中读取数据并且转换成列表
         :param file_path: 文件路径
@@ -49,6 +50,30 @@ class ExcelUtils(object):
         return list_data
 
     @staticmethod
+    def execl_to_list_for_openpyxl(file_path_excel: str) -> dict:
+        """
+        通过excel文件名,将文件转成字典输出
+        :param file_path_excel: excel文件路径名称
+        :return: 字典
+        """
+        # 判断文件是否存在,不存在则直接跳出
+        if not os.path.exists(file_path_excel):
+            return {"error": 1, "msg": f"文件:{file_path_excel}不存在", "result": None}
+
+        wb = xt.load_workbook(filename=file_path_excel)
+        sheet = wb["Sheet1"]
+
+        list_data = list()
+        for row in sheet.rows:
+            list_tmp = list()
+            for cell in row:
+                list_tmp.append(cell.value)
+
+            list_data.append(list_tmp)
+
+        return {"error": 0, "msg": f"已成功处理!", "data": list_data}
+
+    @staticmethod
     def list_to_execl(list_data: list, file_path_to_save: str):
         """
         根据传入的列表参数,写入到指定的文件中,文件为excel
@@ -63,26 +88,29 @@ class ExcelUtils(object):
 
         wt = xt.Workbook()
         sheet = wt.create_sheet("result", 0)
-        for row in list_data:
-            for n_col in range(len(row)):
-                sheet.cell(list_data.index(row) + 1, n_col + 1, row[n_col])
+        with tqdm(total=len(list_data)) as pbar:
+            pbar.set_description("完成进度:")
+            for row in list_data:
+                for n_col in range(len(row)):
+                    sheet.cell(list_data.index(row) + 1, n_col + 1, row[n_col])
+                pbar.update(1)
 
         wt.save(file_path_to_save)
+        return {"error": 0, "msg": f"保存成功(路径名:{file_path_to_save})!", "data": None}
 
 
-def deal_list_number(list_data: list) -> list:
-    list_data[0] = int(list_data[0])
-    list_data[7] = int(list_data[7])
+def deal_list_number(list_data: list, deal_col=1) -> list:
+    list_data[deal_col] = int(list_data[deal_col])
     return list_data
 
 
-def get_pinyin(str_content: str)->str:
+def get_pinyin(str_content: str) -> str:
     return ''.join(ppy.lazy_pinyin(str_content, style=ppy.Style.FIRST_LETTER))\
-        .upper().replace("／", "").replace("）","").replace("（", "")
+        .upper().replace("／", "").replace("）", "").replace("（", "")
 
 
 def main():
-    file_path = r"C:\Users\zhiming\Downloads\省肿瘤医院人事科室列表.xls"
+    file_path = r"C:\Users\Administrator\Desktop\人员字典.xlsx"
     list_data = ExcelUtils.excel_to_list(file_path=file_path)
     for d in list_data:
         if list_data.index(d) == 0:
@@ -91,6 +119,7 @@ def main():
 
     file_path_to_save = "result.xlsx"
     ExcelUtils.list_to_execl(list_data, file_path_to_save)
+    # print(ExcelUtils.execl_to_list_for_openpyxl(file_path_excel=file_path))
 
 
 if __name__ == "__main__":

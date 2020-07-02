@@ -5,4 +5,4 @@
 *.pyc
 */dist/*
 */build/*
-/venv/
+/venv/*

@@ -89,7 +89,7 @@ class ExcelUtils(object):
         wt = xt.Workbook()
         sheet = wt.create_sheet("result", 0)
         with tqdm(total=len(list_data)) as pbar:
-            pbar.set_description("完成进度:")
+            pbar.set_description("完成进度")
             for row in list_data:
                 for n_col in range(len(row)):
                     sheet.cell(list_data.index(row) + 1, n_col + 1, row[n_col])

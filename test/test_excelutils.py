@@ -18,7 +18,7 @@ from utils.ExeclUtils import ExcelUtils as xlsx
 from utils.ExeclUtils import get_pinyin
 
 def excel_to_py():
-    file_path = r"C:\Users\Administrator\Desktop\科室字典.xlsx"
+    file_path = r"C:\Users\Administrator\Desktop\浙江省肿瘤医院机构_导出.xlsx"
     data = xlsx.execl_to_list_for_openpyxl(file_path).get("data")
     # 标题
     header = data[0]
@@ -28,7 +28,7 @@ def excel_to_py():
     # 得到含有拼音的列表
     for tmp_data in data:
         tmp_dict_data = dict(zip(header, tmp_data))
-        tmp_dict_data["py"] = get_pinyin(tmp_dict_data.get("ksmc"))
+        tmp_dict_data["py"] = get_pinyin(tmp_dict_data.get("name"))
         list_data.append(list(tmp_dict_data.values()))
 
     import os

@@ -1,24 +1,23 @@
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import openpyxl as xt
 # ======================================================================
 #   Copyright (C) 2020 liaozhimingandy@qq.com Ltd. All Rights Reserved.
 #
 #   @Author      : zhiming
 #   @Project     : Demo
-#   @File Name   : ExeclUtils.py	
+#   @File Name   : ExeclUtils.py
 #   @Created Date: 2020-06-15 17:46
-#      @Software : PyCharm
-#         @e-Mail: liaozhimingandy@qq.com
+#   @Software    : PyCharm
+#   @e-Mail      : liaozhimingandy@qq.com
 #   @Description :
 #
 # ======================================================================
 import os
-
-from tqdm import tqdm
-import xlrd as xd
-import openpyxl as xt
 import pypinyin as ppy
+import xlrd as xd
+from tqdm import tqdm
 
 
 class ExcelUtils(object):
@@ -120,7 +119,6 @@ def main():
     file_path_to_save = "result.xlsx"
     ExcelUtils.list_to_execl(list_data, file_path_to_save)
     # print(ExcelUtils.execl_to_list_for_openpyxl(file_path_excel=file_path))
-
 
 if __name__ == "__main__":
     main()

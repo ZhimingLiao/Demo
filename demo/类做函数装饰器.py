@@ -21,6 +21,7 @@ class Test(object):
         self.__func = func
 
     def __call__(self, *args, **kwargs):
+        print("类本身方法")
         self.__func()
 
 

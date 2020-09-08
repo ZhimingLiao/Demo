@@ -19,6 +19,7 @@ import pypinyin as ppy
 import xlrd as xd
 from tqdm import tqdm
 
+from loguru import logger
 
 class ExcelUtils(object):
 
@@ -44,7 +45,7 @@ class ExcelUtils(object):
             # tmp_dict_data = dict(zip(excel_title, tmp_content))
             list_data.append(tmp_content)
 
-        list_data = list(map(deal_list_number, list_data))
+        # list_data = list(map(deal_list_number, list_data))
         list_data.insert(0, excel_title)
         return list_data
 
@@ -109,13 +110,21 @@ def get_pinyin(str_content: str) -> str:
 
 
 def main():
-    file_path = r"C:\Users\Administrator\Desktop\人员字典.xlsx"
+    file_path = r"D:\检验.xlsx"
     list_data = ExcelUtils.excel_to_list(file_path=file_path)
-    for d in list_data:
-        if list_data.index(d) == 0:
-            continue
-        d[1] = get_pinyin(d[3])
 
+    with tqdm(total=len(list_data)) as pbar:
+        pbar.set_description("list转换进度")
+        for d in list_data:
+            if list_data.index(d) == 0:
+                continue
+            d[0] = d[0].strip()
+            d.append(get_pinyin(d[0]))
+            d.append(list_data.index(d))
+            # logger.info(d)
+            pbar.update(1)
+
+    # logger.info(list_data)
     file_path_to_save = "result.xlsx"
     ExcelUtils.list_to_execl(list_data, file_path_to_save)
     # print(ExcelUtils.execl_to_list_for_openpyxl(file_path_excel=file_path))
